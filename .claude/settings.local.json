@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const m = require\\('@tanstack/router-plugin/vite'\\); console.log\\(Object.keys\\(m\\)\\)\")",
+      "Bash(node -e \"const p = require\\('c:/Users/orelg/OneDrive/Desktop/projects/JIRAEL/node_modules/@tanstack/router-cli/package.json'\\); console.log\\(JSON.stringify\\(p.bin, null, 2\\)\\)\")",
+      "Bash(node node_modules/@tanstack/router-cli/bin/tsr.cjs generate)",
+      "Bash(echo \"exit: $?\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\orelg\\OneDrive\\Desktop\\projects\\JIRAEL\\src\\types"
+    ]
+  }
+}
