@@ -20,12 +20,15 @@ export function useBoard(): BoardWidgetState {
     dispatch(deleteTask({ taskId }));
   };
 
-  return {
-    status: 'ready',
-    columns: DEFAULT_COLUMNS,
-    tasks,
+  const handlers = {
     onAddTask: handleAddTask,
     onMoveTask: handleMoveTask,
     onDeleteTask: handleDeleteTask,
   };
+
+  if (tasks.length === 0) {
+    return { status: 'empty', columns: DEFAULT_COLUMNS, tasks, ...handlers };
+  }
+
+  return { status: 'success', columns: DEFAULT_COLUMNS, tasks, ...handlers };
 }

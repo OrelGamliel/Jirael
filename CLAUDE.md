@@ -41,33 +41,54 @@ src/features/<feature>/
 
 ---
 
-## The Widget Dual-Export Pattern (CRITICAL)
+## The Widget Pattern (CRITICAL)
 
-Every widget file must export **two** things:
+Every widget file must export **four** things:
 
 ```ts
 // FooWidget.tsx
 
-// 1. Pure UI — receives a discriminated union as props. Stories target this.
-export function FooWidgetContent(props: FooWidgetState) { ... }
+// 1. Skeleton — shown while loading
+export function FooWidgetSkeleton() { ... }
 
-// 2. Container — calls the hook, passes state down. Nothing else.
+// 2. Error — shown on error status
+export function FooWidgetError({ message }: { message: string }) { ... }
+
+// 3. Pure UI — only receives statuses that carry data (success/empty).
+//    Use Extract<> to narrow the union to only the relevant statuses.
+type ContentState = Extract<FooWidgetState, { status: 'success' | 'empty' }>;
+export function FooWidgetContent(props: ContentState) { ... }
+
+// 4. Container — calls the hook, switches on status, renders the right component.
 export function FooWidget() {
   const state = useFoo();
-  return <FooWidgetContent {...state} />;
+  switch (state.status) {
+    case 'loading': return <FooWidgetSkeleton />;
+    case 'error':   return <FooWidgetError message={state.message} />;
+    case 'empty':
+    case 'success': return <FooWidgetContent {...state} />;
+  }
 }
 ```
 
-### Hooks must return discriminated unions
+### Hooks must return a 4-status discriminated union
 
 ```ts
 type FooWidgetState =
   | { status: 'loading' }
-  | { status: 'error'; error: Error }
-  | { status: 'success'; data: Foo[] };
+  | { status: 'error'; message: string }
+  | ({ status: 'empty' } & FooData & FooHandlers)
+  | ({ status: 'success' } & FooData & FooHandlers);
 
 export function useFoo(): FooWidgetState { ... }
 ```
+
+- `loading` — data is being fetched
+- `error` — something failed; always include a `message: string`
+- `empty` — fetch succeeded but the collection is empty
+- `success` — fetch succeeded and data is present
+- Shared data/handler shapes should be extracted into interfaces (`FooData`, `FooHandlers`) and composed with `&` to avoid repetition
+- The switch in `FooWidget` must be exhaustive — TypeScript will error if a status is unhandled
 
 ---
 
@@ -100,7 +121,7 @@ Cross-feature imports must go through `common/` or be explicitly justified.
 
 ## Naming Conventions
 
-- Widgets: `<Noun>Widget` / `<Noun>WidgetContent`
+- Widgets: `<Noun>Widget` / `<Noun>WidgetContent` / `<Noun>WidgetSkeleton` / `<Noun>WidgetError`
 - Hooks: `use<Noun>` returning a discriminated union named `<Noun>State`
 - Slices: `<noun>Slice`
 - Zod schemas: `<Noun>Schema`

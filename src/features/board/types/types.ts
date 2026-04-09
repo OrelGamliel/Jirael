@@ -20,8 +20,17 @@ export interface Column {
   label: string;
 }
 
+interface BoardHandlers {
+  onAddTask: (payload: AddTaskPayload) => void;
+  onMoveTask: (taskId: string, toColumnId: ColumnId) => void;
+  onDeleteTask: (taskId: string) => void;
+}
+
 export type BoardWidgetState =
-  | { status: 'ready'; columns: Column[]; tasks: Task[]; onAddTask: (payload: AddTaskPayload) => void; onMoveTask: (taskId: string, toColumnId: ColumnId) => void; onDeleteTask: (taskId: string) => void };
+  | { status: 'loading' }
+  | { status: 'error'; message: string }
+  | ({ status: 'empty'; columns: Column[]; tasks: Task[] } & BoardHandlers)
+  | ({ status: 'success'; columns: Column[]; tasks: Task[] } & BoardHandlers);
 
 export interface AddTaskPayload {
   title: string;

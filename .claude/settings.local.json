@@ -1,4 +1,19 @@
 {
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/test_hook.js",
+            "timeout": 120,
+            "statusMessage": "Running feature tests..."
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Bash(node -e \"const m = require\\('@tanstack/router-plugin/vite'\\); console.log\\(Object.keys\\(m\\)\\)\")",

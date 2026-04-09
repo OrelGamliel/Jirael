@@ -6,7 +6,7 @@ export const StyledCard = styled.div<{ $isDragging?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing.md};
   cursor: grab;
-  opacity: ${({ $isDragging }) => ($isDragging ? 0.4 : 1)};
+  opacity: ${({ $isDragging }) => ($isDragging ? 0 : 1)};
   box-shadow: ${({ $isDragging }) =>
     $isDragging ? '0 8px 24px rgba(0,0,0,0.12)' : '0 1px 3px rgba(0,0,0,0.06)'};
   transition: box-shadow 0.15s;

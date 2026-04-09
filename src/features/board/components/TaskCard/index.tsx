@@ -30,6 +30,7 @@ export function TaskCard({ task, onDelete }: TaskCardProps) {
         <Button
           variant="ghost"
           size="sm"
+          onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation();
             onDelete(task.id);
